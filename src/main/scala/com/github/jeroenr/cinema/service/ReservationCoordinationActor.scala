@@ -27,16 +27,19 @@ class ReservationCoordinationActor(availableScreenings: List[Screening], updateF
     log.info(s"Starting reservation coordinator")
     reserveSeatActors = availableScreenings.map {
       case Screening(_, screenId, movieId, _, _, availableSeats) =>
+        log.debug(s"Creating reserve seat actor for movie $movieId, screen $screenId and seats $availableSeats")
         reserveSeatActorMappingFor(movieId, screenId, availableSeats)
     }.toMap
   }
 
   override def receive: Receive = {
     case ReserveSeat(movieId, screenId) =>
+      log.debug(s"Finding reserve seat actor to handle reservation for movie $movieId and screen $screenId")
+      log.debug(s"Actors $reserveSeatActors")
       reserveSeatActors.get((movieId, screenId)).map { reserveSeatActor =>
         log.info(s"Trying to reserve seat for movie $movieId and screen $screenId")
         reserveSeatActor ? ReserveSeatActor.ReserveSeat
-      }.getOrElse(Future(ReserveSeatActor.SoldOut)).pipeTo(sender())
+      }.getOrElse(Future.successful(ReserveSeatActor.SoldOut)).pipeTo(sender())
 
     case AddScreening(movieId, screenId, availableSeats) =>
       log.info(s"Add new screening for movie $movieId and screen $screenId for $availableSeats seats")
@@ -52,7 +55,10 @@ class ReservationCoordinationActor(availableScreenings: List[Screening], updateF
   }
 
   private def reserveSeatActorMappingFor(movieId: String, screenId: String, availableSeats: Int) =
-    (movieId, screenId) -> context.system.actorOf(Props(new ReserveSeatActor((movieId, screenId), availableSeats, updateFunc)))
+    (movieId, screenId) -> createChildActor(movieId, screenId, availableSeats)
+
+  protected def createChildActor(movieId: String, screenId: String, availableSeats: Int) =
+    context.system.actorOf(Props(new ReserveSeatActor((movieId, screenId), availableSeats, updateFunc)))
 }
 
 object ReservationCoordinationActor {
