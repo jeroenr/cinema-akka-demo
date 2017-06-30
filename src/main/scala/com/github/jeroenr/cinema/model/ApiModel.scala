@@ -26,6 +26,7 @@ case class NewScreening(
 case class Screening(
   screenId: String,
   imdbId: String,
+  availableSeats: Int,
   reservedSeats: Int,
   movieTitle: String
 ) extends ApiModel
@@ -53,7 +54,7 @@ object ApiModel extends DefaultJsonProtocol {
   implicit val newMovieFormat = jsonFormat1(NewMovie)
   implicit val movieListFormat = jsonFormat1(MovieList)
   implicit val newScreeningFormat = jsonFormat3(NewScreening)
-  implicit val screeningFormat = jsonFormat4(Screening)
+  implicit val screeningFormat = jsonFormat5(Screening)
   implicit val screeningListFormat = jsonFormat1(ScreeningList)
   implicit val reservationFormat = jsonFormat2(Reservation)
   implicit val newReservationFormat = jsonFormat2(NewReservation)

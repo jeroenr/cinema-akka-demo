@@ -29,6 +29,12 @@ class ReserveSeatActor(movieId: String, screenId: String, initialSeatsAvailable:
     log.info(s"Starting reserve seat actor for movie $movieId and screen $screenId")
   }
 
+
+  @scala.throws[Exception](classOf[Exception])
+  override def postStop(): Unit = {
+    log.info(s"Stopped reserve seat actor for movie $movieId and screen $screenId")
+  }
+
   override def receive: Receive = {
     case ReserveSeat =>
       log.info(s"Checking availability")

@@ -29,6 +29,7 @@ class ReservationService(reservationDao: ReservationDao, reservationCoordination
     )).flatMap {
       case ReserveSeatActor.SeatRegistered(left) =>
         log.info(s"Seat reserved for movie ${newReservation.imdbId} and screen ${newReservation.screenId}. $left seats left.")
+        if(left <= 0) reservationCoordinationActor ! ReservationCoordinationActor.RemoveScreening
         val id = uuid
         reservationDao.insertOne(ReservationEntity(id, newReservation.screenId)).map {
           case true => Success(id)

@@ -55,6 +55,7 @@ class ScreeningService(screeningDao: ScreeningDao, movieDao: MovieDao, reservati
     Screening(
       screenId = entity.id,
       imdbId = entity.movieId,
+      availableSeats = entity.totalSeats,
       reservedSeats = entity.totalSeats - entity.availableSeats,
       movieTitle = entity.movieTitle
     )

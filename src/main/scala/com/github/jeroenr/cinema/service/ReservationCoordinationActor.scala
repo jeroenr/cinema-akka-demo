@@ -1,9 +1,9 @@
 package com.github.jeroenr.cinema.service
 
-import akka.actor.{ Actor, ActorRef, Props }
+import akka.actor.{Actor, ActorRef, PoisonPill, Props}
 import akka.actor.Actor.Receive
 import com.github.jeroenr.cinema.common.Logging
-import com.github.jeroenr.cinema.persistence.{ Screening, ScreeningDao }
+import com.github.jeroenr.cinema.persistence.{Screening, ScreeningDao}
 import com.github.jeroenr.cinema.service.ReservationCoordinationActor._
 import org.mongodb.scala.MongoDatabase
 import org.mongodb.scala.model.Filters._
@@ -45,7 +45,9 @@ class ReservationCoordinationActor(availableScreenings: List[Screening], updateF
 
     case RemoveScreening(movieId, screenId) =>
       log.info(s"Remove screening for movie $movieId and screen $screenId")
-      reserveSeatActors -= uniqueId(movieId, screenId)
+      val id = uniqueId(movieId, screenId)
+      reserveSeatActors.get(id).foreach(_ ! PoisonPill)
+      reserveSeatActors -= id
       sender() ! ScreeningRemoved
   }
 
