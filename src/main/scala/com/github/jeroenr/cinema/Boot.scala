@@ -6,7 +6,6 @@ import akka.stream.ActorMaterializer
 import com.github.jeroenr.cinema.common._
 import com.github.jeroenr.cinema.service._
 import com.github.jeroenr.cinema.persistence._
-import org.mongodb.scala.model.Filters._
 
 import scala.language.postfixOps
 

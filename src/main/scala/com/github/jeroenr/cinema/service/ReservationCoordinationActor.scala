@@ -1,12 +1,10 @@
 package com.github.jeroenr.cinema.service
 
 import akka.actor.{ Actor, ActorRef, PoisonPill, Props }
-import akka.actor.Actor.Receive
 import com.github.jeroenr.cinema.common.Logging
-import com.github.jeroenr.cinema.persistence.{ Screening, ScreeningDao }
+import com.github.jeroenr.cinema.persistence.Screening
 import com.github.jeroenr.cinema.service.ReservationCoordinationActor._
 import org.mongodb.scala.MongoDatabase
-import org.mongodb.scala.model.Filters._
 import akka.pattern._
 import akka.util.Timeout
 

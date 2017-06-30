@@ -5,9 +5,6 @@ import akka.http.scaladsl.model.Uri
 import net.ceedubs.ficus.Ficus
 import net.ceedubs.ficus.readers.{ ArbitraryTypeReader, ValueReader }
 
-import scala.util.Try
-import scala.collection.JavaConversions._
-
 object Config {
   import ArbitraryTypeReader._
   import Ficus._

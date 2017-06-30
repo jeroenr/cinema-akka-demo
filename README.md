@@ -54,5 +54,6 @@ curl -X POST \
 ## Known Limitations
 - No transactions
 - Can only screen a movie with the same screen id after deleting the screening through REST api
+- No pagination
 
 

@@ -2,7 +2,7 @@ package com.github.jeroenr.cinema.service
 
 import akka.actor.ActorRef
 import com.github.jeroenr.cinema.model._
-import com.github.jeroenr.cinema.persistence.{ MovieDao, ReservationDao, ScreeningDao, Reservation => ReservationEntity }
+import com.github.jeroenr.cinema.persistence.{ ReservationDao, Reservation => ReservationEntity }
 import org.mongodb.scala.MongoDatabase
 
 import scala.concurrent.{ ExecutionContext, Future }

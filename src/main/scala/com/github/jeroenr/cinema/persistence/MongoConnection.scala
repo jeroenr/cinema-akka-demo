@@ -3,7 +3,7 @@ package com.github.jeroenr.cinema.persistence
 import org.mongodb.scala.MongoClient
 
 /**
- * A standard wrapper around a Mongo connection to manage the state. Can be subclasses and should be used
+ * A standard wrapper around a Mongo connection to manage the state. Can be subclassed and should be used
  * to provide a singleton within an application.
  */
 trait MongoConnection {
@@ -17,13 +17,6 @@ trait MongoConnection {
 
   private val mongoClient = MongoClient(mongoUri)
 
-  /**
-   * Returns an instance of a database specified by the name.
-   *
-   * @param dbName the name of the database.
-   *
-   * @return an instance of the database.
-   */
   def getDb(dbName: String) = {
     mongoClient.getDatabase(dbName)
   }

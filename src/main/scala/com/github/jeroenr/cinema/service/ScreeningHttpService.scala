@@ -6,8 +6,7 @@ import com.github.jeroenr.cinema.model._
 import com.github.jeroenr.cinema.common._
 import org.mongodb.scala.MongoDatabase
 
-import scala.concurrent.{ ExecutionContext, Future }
-import scala.util.{ Failure, Success }
+import scala.concurrent.{ ExecutionContext }
 
 class ScreeningHttpService(screeningService: ScreeningService)(implicit ec: ExecutionContext, db: MongoDatabase) extends Directives with SprayJsonSupport with Logging {
 
