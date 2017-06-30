@@ -1,7 +1,7 @@
 package com.github.jeroenr.cinema.service
 
-import akka.actor.{Actor, PoisonPill}
-import com.github.jeroenr.cinema.common.{Config, Logging}
+import akka.actor.{ Actor, PoisonPill }
+import com.github.jeroenr.cinema.common.{ Config, Logging }
 
 import scala.concurrent.duration._
 import akka.util.Timeout

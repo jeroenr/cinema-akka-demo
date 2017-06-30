@@ -14,9 +14,14 @@ class ScreeningHttpService(screeningService: ScreeningService)(implicit ec: Exec
   val screeningsRoute =
     pathPrefix("screenings") {
       pathEndOrSingleSlash {
-        get {
-          complete(screeningService.list().map(ScreeningList.apply))
+        parameters('imdbId, 'screenId) { (imdbId, screenId) =>
+          get {
+            complete(screeningService.findByMovieAndScreen(imdbId, screenId))
+          }
         } ~
+          get {
+            complete(screeningService.list().map(ScreeningList.apply))
+          } ~
           post {
             entity(as[NewScreening]) { newScreening =>
               complete {

@@ -17,6 +17,9 @@ class ScreeningService(screeningDao: ScreeningDao, movieDao: MovieDao, reservati
 
   implicit val timeout = Timeout(10 seconds)
 
+  def findByMovieAndScreen(movieId: String, screenId: String)(implicit ec: ExecutionContext, db: MongoDatabase): Future[Option[Screening]] =
+    screeningDao.findByMovieAndScreen(movieId, screenId).map(_.map(entityToResponseModel))
+
   def findById(id: String)(implicit ec: ExecutionContext, db: MongoDatabase): Future[Option[Screening]] =
     screeningDao.findById(id).map(_.map(entityToResponseModel))
 
