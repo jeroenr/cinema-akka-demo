@@ -1,5 +1,5 @@
-# Geolocation service
-This is a tiny application that imports and serves geolocation information from various sources. On start up the application will load the geolocation information from the configured sources until drained and serve the results under ```GET http://$host:$port/ips/$ip```
+# Cinema service
+This is a tiny API that allows reserving seats for movies. Example API calls can be found in this Postman collection https://www.getpostman.com/collections/21b2c655662e473d2896
 
 ## Requirements
 - Sbt 0.13.*
@@ -9,28 +9,50 @@ This is a tiny application that imports and serves geolocation information from 
 Simply run by ```sbt run``` or build a docker image first ```sbt docker:publishLocal```
 
 ## Configuration
-The main configuration file is ```src/main/resources/reference.conf```. The format is [HOCON](https://github.com/typesafehub/config/blob/master/HOCON.md). Here you can specify the database endpoint, the HTTP interface and the sources to process. Currently the application supports local CSV files. A sample configuration:
+The main configuration file is ```src/main/resources/reference.conf```. The format is [HOCON](https://github.com/typesafehub/config/blob/master/HOCON.md). Here you can specify the database endpoint and the HTTP interface.
+
+## Example flow
+
+### Create a movie
 ```
-jeroenr.geolocation {
-    import {
-        batchSize = 1000
-        parallellism = 4
-        
-        sources = [
-          {
-              location = "/Users/jero/dev/projects/be_code_challenge_jeroenr_1663260/input/data_dump.csv"
-              type = "local-dsv"
-              delimiter = ","
-              header = true
-          }
-        ]
-    }
-}
+curl -X POST \
+  http://localhost:9090/movies \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json' \
+  -d '{
+  "movieTitle": "The Shawshank Redemption"
+}'
 ```
 
+### Create a screening
+Use returned id of created movie call as imdbId
+```
+curl -X POST \
+  http://localhost:9090/screenings \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json' \
+  -d '{
+  "imdbId": "78476384-5af7-4251-ba0e-cb78748b2a1a",
+  "availableSeats": 100,
+  "screenId": "screen_123456"
+}'
+```
+
+### Make reservations
+```
+curl -X POST \
+  http://localhost:9090/reservations \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json' \
+  -d '{
+  "imdbId": "78476384-5af7-4251-ba0e-cb78748b2a1a",
+  "screenId": "screen_123456"
+}'
+```
+
+
 ## Known Limitations
-- Should use something like Kamon for tracking metrics
-- Supporting upserts? Currently we ignore existing IP entries
-- Listing the Ip entries through the API should implement proper pagination
+- No transactions
+- Can only screen a movie with the same screen id after deleting the screening through REST api
 
 
