@@ -44,6 +44,10 @@ class ReserveSeatActor(screeningId: MovieAndScreen, initialSeatsAvailable: Int, 
           case amount =>
             log.error(s"Couldn't reserve seat. Updated ${amount} reservations")
             Error("Couldn't reserve seat")
+        }.recover {
+          case t =>
+            log.error(s"Exception while trying to persist reservation", t)
+            Error("Couldn't persist seat reservation")
         }.pipeTo(sender())
 
       } else {
