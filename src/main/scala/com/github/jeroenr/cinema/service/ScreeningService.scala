@@ -23,6 +23,9 @@ class ScreeningService(screeningDao: ScreeningDao, movieDao: MovieDao, reservati
   def findById(id: String)(implicit ec: ExecutionContext, db: MongoDatabase): Future[Option[Screening]] =
     screeningDao.findById(id).map(_.map(entityToResponseModel))
 
+  def remove(id: String)(implicit ec: ExecutionContext, db: MongoDatabase): Future[Option[EntityModified]] =
+    screeningDao.removeById(id).map(Option.apply).map(_.filter(1 ==).map(_ => EntityModified(Some(id), None)))
+
   def create(newScreening: NewScreening)(implicit ec: ExecutionContext, db: MongoDatabase): Future[Try[String]] = {
     log.info(s"Creating screening $newScreening")
     movieDao.findById(newScreening.imdbId).flatMap {

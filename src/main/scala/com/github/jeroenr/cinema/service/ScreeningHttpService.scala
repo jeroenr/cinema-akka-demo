@@ -25,7 +25,7 @@ class ScreeningHttpService(screeningService: ScreeningService)(implicit ec: Exec
           post {
             entity(as[NewScreening]) { newScreening =>
               complete {
-                screeningService.create(newScreening).map(toResponse("screening"))
+                screeningService.create(newScreening).map(toCreationResponse("screening"))
               }
             }
           }
@@ -34,7 +34,10 @@ class ScreeningHttpService(screeningService: ScreeningService)(implicit ec: Exec
           pathEndOrSingleSlash {
             get {
               complete(screeningService.findById(id))
-            }
+            } ~
+              delete {
+                complete(screeningService.remove(id))
+              }
           }
         }
     }

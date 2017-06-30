@@ -24,7 +24,7 @@ trait MovieHttpService extends Directives with SprayJsonSupport with Logging {
           post {
             entity(as[NewMovie]) { newMovie =>
               complete {
-                create(newMovie).map(toResponse("movie"))
+                create(newMovie).map(toCreationResponse("movie"))
               }
             }
           }

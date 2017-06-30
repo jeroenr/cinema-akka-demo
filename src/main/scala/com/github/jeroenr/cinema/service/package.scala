@@ -12,19 +12,19 @@ package object service extends Logging {
 
   sealed trait ResponseModel
 
-  case class EntityCreated(
+  case class EntityModified(
     id: Option[String],
     error: Option[String]
   ) extends ResponseModel
 
   object ResponseModel extends DefaultJsonProtocol {
-    implicit val entityCreatedFormat = jsonFormat2(EntityCreated)
+    implicit val entityCreatedFormat = jsonFormat2(EntityModified)
   }
 
-  def toResponse(entityType: String): PartialFunction[Try[String], EntityCreated] = {
-    case Success(id) => EntityCreated(id = Some(id), error = None)
+  def toCreationResponse(entityType: String): PartialFunction[Try[String], EntityModified] = {
+    case Success(id) => EntityModified(id = Some(id), error = None)
     case Failure(t) =>
       log.error(s"Couldn't add $entityType", t)
-      EntityCreated(id = None, error = Some(s"Couldn't add $entityType. ${t.getMessage}"))
+      EntityModified(id = None, error = Some(s"Couldn't add $entityType. ${t.getMessage}"))
   }
 }

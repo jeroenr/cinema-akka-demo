@@ -57,6 +57,7 @@ class ReservationService(reservationDao: ReservationDao, reservationCoordination
   private def entityToResponseModel(entity: ReservationEntity) =
     Reservation(
       id = entity.id,
-      screenId = entity.screenId
+      screenId = entity.screenId,
+      movieId = entity.movieId
     )
 }

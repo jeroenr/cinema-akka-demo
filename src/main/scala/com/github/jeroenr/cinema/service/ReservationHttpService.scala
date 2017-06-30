@@ -19,7 +19,7 @@ class ReservationHttpService(reservationService: ReservationService)(implicit ec
           post {
             entity(as[NewReservation]) { newReservation =>
               complete {
-                reservationService.create(newReservation).map(toResponse("reservation"))
+                reservationService.create(newReservation).map(toCreationResponse("reservation"))
               }
             }
           }
