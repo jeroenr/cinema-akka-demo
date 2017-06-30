@@ -43,7 +43,7 @@ class ReservationService(reservationDao: ReservationDao, reservationCoordination
           case _ => Failure(new IllegalStateException(s"Couldn't add reservation $newReservation"))
         }
       case ReserveSeatActor.SoldOut =>
-        Future.failed(new IllegalArgumentException(s"Can't make reservation because the screening ${newReservation.screenId} is sold out!"))
+        Future.failed(new IllegalArgumentException(s"Can't make reservation because the screening of movie ${newReservation.imdbId} at screen ${newReservation.screenId} is sold out!"))
       case ReserveSeatActor.Error(msg) =>
         Future.failed(new IllegalStateException(msg))
     }.recover {
