@@ -1,19 +1,14 @@
 package com.github.jeroenr.cinema.service
 
-import akka.actor.Props
 import akka.testkit.{ TestActorRef, TestProbe }
-import com.github.jeroenr.cinema.ActorTestBase
+import com.github.jeroenr.cinema.{ ActorTestBase, FakeDb }
 import com.github.jeroenr.cinema.persistence.Screening
 import com.github.jeroenr.cinema.service.ReservationCoordinationActor._
-import org.mongodb.scala.MongoDatabase
 
 import scala.concurrent.Future
-import scala.util.control.NoStackTrace
 
-class ReservationCoordinationActorTest extends ActorTestBase {
+class ReservationCoordinationActorTest extends ActorTestBase with FakeDb {
   sequential
-
-  implicit val db = MongoDatabase(null)
 
   def fakeUpdateFunc(id: (String, String), numSeats: Int) =
     Future.successful(1L)
