@@ -6,6 +6,7 @@ sealed trait CinemaModel
 
 case class Screening(
   id: String,
+  screenId: String,
   movieId: String,
   movieTitle: String,
   totalSeats: Int,
@@ -19,11 +20,12 @@ case class Movie(
 
 case class Reservation(
   id: String,
-  screenId: String
+  screenId: String,
+  movieId: String
 ) extends CinemaModel
 
 object CinemaModel extends DefaultJsonProtocol {
   implicit val movieFormat = jsonFormat2(Movie)
-  implicit val reservationFormat = jsonFormat2(Reservation)
-  implicit val screeningFormat = jsonFormat5(Screening)
+  implicit val reservationFormat = jsonFormat3(Reservation)
+  implicit val screeningFormat = jsonFormat6(Screening)
 }

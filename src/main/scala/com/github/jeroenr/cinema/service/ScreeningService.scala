@@ -24,17 +24,16 @@ class ScreeningService(screeningDao: ScreeningDao, movieDao: MovieDao, reservati
     log.info(s"Creating screening $newScreening")
     movieDao.findById(newScreening.imdbId).flatMap {
       case Some(movie) =>
-        screeningDao.insertOne(ScreeningEntity(
-          id = newScreening.screenId,
+        screeningDao.add(
           movieId = movie.id,
-          movieTitle = movie.title,
-          totalSeats = newScreening.availableSeats,
+          screenId = newScreening.screenId,
+          title = movie.title,
           availableSeats = newScreening.availableSeats
-        )).flatMap {
+        ).flatMap {
           case true =>
             log.info(s"Created new screening $newScreening")
             (reservationCoordinator ? ReservationCoordinationActor.AddScreening(movie.id, newScreening.screenId, newScreening.availableSeats))
-              .map(_ => Success(newScreening.screenId))
+              .map(_ => Success(screeningDao.uniqueId(movie.id, newScreening.screenId)))
           case false =>
             Future.failed(new IllegalStateException(s"Failed to open reservation for screening $newScreening"))
         }
@@ -53,7 +52,7 @@ class ScreeningService(screeningDao: ScreeningDao, movieDao: MovieDao, reservati
 
   private def entityToResponseModel(entity: ScreeningEntity): Screening =
     Screening(
-      screenId = entity.id,
+      screenId = entity.screenId,
       imdbId = entity.movieId,
       availableSeats = entity.totalSeats,
       reservedSeats = entity.totalSeats - entity.availableSeats,

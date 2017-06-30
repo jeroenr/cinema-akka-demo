@@ -8,6 +8,8 @@ import scala.util.{ Failure, Success, Try }
 package object service extends Logging {
   def uuid = java.util.UUID.randomUUID.toString
 
+  type MovieAndScreen = (String, String)
+
   sealed trait ResponseModel
 
   case class EntityCreated(
