@@ -29,8 +29,9 @@ class ReservationService(reservationDao: ReservationDao, reservationCoordination
     )).flatMap {
       case ReserveSeatActor.SeatRegistered(left) =>
         log.info(s"Seat reserved for movie ${newReservation.imdbId} and screen ${newReservation.screenId}. $left seats left.")
-        reservationDao.insertOne(ReservationEntity(uuid, newReservation.screenId)).map {
-          case true => Success(uuid)
+        val id = uuid
+        reservationDao.insertOne(ReservationEntity(id, newReservation.screenId)).map {
+          case true => Success(id)
           case _ => Failure(new IllegalStateException(s"Couldn't add reservation $newReservation"))
         }
       case ReserveSeatActor.SoldOut =>

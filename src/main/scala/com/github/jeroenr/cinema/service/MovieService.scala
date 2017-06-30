@@ -18,8 +18,9 @@ trait MovieService extends Logging {
 
   def create(newMovie: NewMovie)(implicit ec: ExecutionContext, db: MongoDatabase): Future[Try[String]] = {
     log.info(s"Creating movie $newMovie")
-    movieDao.insertOne(MovieEntity(uuid, newMovie.movieTitle)).map {
-      case true => Success(uuid)
+    val id = uuid
+    movieDao.insertOne(MovieEntity(id, newMovie.movieTitle)).map {
+      case true => Success(id)
       case _ => Failure(new IllegalStateException(s"Couldn't create movie $newMovie"))
     }.recover {
       case t =>
