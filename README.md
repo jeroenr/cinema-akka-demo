@@ -1,4 +1,4 @@
-# Cinema service
+# Cinema API
 This is a tiny API that allows reserving seats for movies. Example API calls can be found in this Postman collection https://www.getpostman.com/collections/21b2c655662e473d2896
 
 ## Requirements
