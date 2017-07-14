@@ -16,9 +16,6 @@ class ReserveSeatActorTest extends ActorTestBase {
   def fakeUpdateFunc(id: (String, String), numSeats: Int) =
     Future.successful(1L)
 
-  def failingUpdateFunc(id: (String, String), numSeats: Int) =
-    Future.failed(new RuntimeException("Booom!") with NoStackTrace)
-
   "ReserveSeatActor" should {
     "register seat until not available" in {
       val reserveSeatActor = system.actorOf(Props(new ReserveSeatActor(("foo", "bar"), 2, fakeUpdateFunc)))
@@ -28,13 +25,6 @@ class ReserveSeatActorTest extends ActorTestBase {
       expectMsg(ReserveSeatActor.SeatRegistered(0))
       reserveSeatActor ! ReserveSeatActor.ReserveSeat
       expectMsg(ReserveSeatActor.SoldOut)
-      success
-    }
-
-    "handle failure of update func" in {
-      val reserveSeatActor = system.actorOf(Props(new ReserveSeatActor(("foo", "bar"), 2, failingUpdateFunc)))
-      reserveSeatActor ! ReserveSeatActor.ReserveSeat
-      expectMsg(ReserveSeatActor.Error("Couldn't persist seat reservation"))
       success
     }
 
