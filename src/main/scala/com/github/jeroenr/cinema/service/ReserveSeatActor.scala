@@ -5,6 +5,7 @@ import com.github.jeroenr.cinema.common.{ Logging }
 
 import scala.concurrent.duration._
 import akka.util.Timeout
+import scala.util.{Success, Failure}
 import org.mongodb.scala.MongoDatabase
 
 import scala.concurrent.Future
@@ -36,19 +37,16 @@ class ReserveSeatActor(screeningId: MovieAndScreen, initialSeatsAvailable: Int, 
       log.info(s"Checking availability")
       if (availableSeats > 0) {
         log.info(s"Looks like there's still $availableSeats seats left!")
-        updateFunc(screeningId, availableSeats - 1).map {
-          case 1L =>
-            availableSeats -= 1
-            log.info(s"Seat reserved for screening $screeningId. $availableSeats seats left.")
-            SeatRegistered(availableSeats)
-          case amount =>
+        availableSeats -= 1
+        updateFunc(screeningId, availableSeats).onComplete {
+          case Success(1L) =>
+            log.info(s"Seat reserved for screening $screeningId. $availableSeats seats left."
+          case Success(amount) =>
             log.error(s"Couldn't reserve seat. Updated ${amount} reservations")
-            Error("Couldn't reserve seat")
-        }.recover {
-          case t =>
+          case Failure(t) =>
             log.error(s"Exception while trying to persist reservation", t)
-            Error("Couldn't persist seat reservation")
-        }.pipeTo(sender())
+        }
+        sender() ! SeatRegistered(availableSeats)
 
       } else {
         log.warn(s"Sorry no more available seats for screening $screeningId")
