@@ -40,7 +40,7 @@ class ReserveSeatActor(screeningId: MovieAndScreen, initialSeatsAvailable: Int, 
         availableSeats -= 1
         updateFunc(screeningId, availableSeats).onComplete {
           case Success(1L) =>
-            log.info(s"Seat reserved for screening $screeningId. $availableSeats seats left."
+            log.info(s"Seat reserved for screening $screeningId. $availableSeats seats left.")
           case Success(amount) =>
             log.error(s"Couldn't reserve seat. Updated ${amount} reservations")
           case Failure(t) =>
